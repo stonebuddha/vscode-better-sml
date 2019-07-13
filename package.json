@@ -10,14 +10,14 @@
 		"Programming Languages"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onLanguage:sml"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "sml.helloWorld",
+				"title": "SML: Hello World"
 			}
 		],
 		"grammars": [
@@ -35,7 +35,8 @@
 				],
 				"extensions": [
 					".sml",
-					".sig"
+					".sig",
+					".fun"
 				],
 				"configuration": "./sml.configuration.json"
 			}
