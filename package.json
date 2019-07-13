@@ -1,13 +1,13 @@
 {
 	"name": "vscode-better-sml",
 	"displayName": "vscode-better-sml",
-	"description": "",
+	"description": "Standard ML Support for Visual Studio Code",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.36.0"
 	},
 	"categories": [
-		"Other"
+		"Programming Languages"
 	],
 	"activationEvents": [
 		"onCommand:extension.helloWorld"
@@ -19,11 +19,31 @@
 				"command": "extension.helloWorld",
 				"title": "Hello World"
 			}
+		],
+		"grammars": [
+			{
+				"language": "sml",
+				"scopeName": "source.sml",
+				"path": "./syntaxes/sml.json"
+			}
+		],
+		"languages": [
+			{
+				"id": "sml",
+				"aliases": [
+					"Standard ML"
+				],
+				"extensions": [
+					".sml",
+					".sig"
+				],
+				"configuration": "./sml.configuration.json"
+			}
 		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
+		"compile": "tsc -p ./ && node script/syntax.js",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
 		"test": "node ./out/test/runTest.js"
