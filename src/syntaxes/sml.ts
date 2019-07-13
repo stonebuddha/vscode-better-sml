@@ -76,6 +76,10 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.TERM_CHARACTER(),
 				},
 				include(this.constantString),
+				{
+					match: seq(Token.LPAREN, Token.RPAREN),
+					name: Scope.TERM_CONSTRUCTOR(),
+				},
 			],
 		};
 	}
@@ -176,11 +180,28 @@ export class StandardML implements basis.ILanguage {
 		return group(seq(lookBehind(group(alt(...result))), negativeLookAhead(set(...this.symbols()))));
 	}
 
+	// Types
+
+	public typ(): schema.Rule {
+		return {
+			patterns: [
+				{
+					match: seq(capture(Token.APOSTROPHE), capture(this.tyvar())),
+					captures: {
+						1: { name: Scope.PUNCTUATION_APOSTROPHE() },
+						2: { name: Scope.VARIABLE_TYPE() },
+					},
+				}
+			],
+		};
+	}
+
 	// Patterns
 
 	public pat(): schema.Rule {
 		return {
 			patterns: [
+				include(this.patMisc),
 				include(this.constant),
 				include(this.patParen),
 				include(this.patIdentifier),
@@ -200,12 +221,12 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.VARIABLE_PATTERN(),
 				},
 				{
-					match: Token.WILD,
+					match: words(Token.WILD),
 					name: Scope.META_COMMENT(),
 				},
 				{
-					match: this.symbolic(),
-					name: Scope.OPERATOR_TYPE(),
+					match: this.ops(this.symbolic()),
+					name: Scope.VARIABLE_PATTERN(),
 				},
 			],
 		};
@@ -221,6 +242,20 @@ export class StandardML implements basis.ILanguage {
 			patterns: [
 				include(this.comment),
 				include(this.pat),
+			],
+		};
+	}
+
+	public patMisc(): schema.Rule {
+		return {
+			patterns: [
+				{
+					match: alt(capture(this.ops(Token.COMMA)), words(capture(Token.AS))),
+					captures: {
+						1: { name: Scope.PUNCTUATION_COMMA() },
+						2: { name: Scope.KEYWORD_AS() },
+					},
+				},
 			],
 		};
 	}
@@ -376,6 +411,8 @@ export class StandardML implements basis.ILanguage {
 
 				pat: this.pat(),
 				patIdentifier: this.patIdentifier(),
+				patParen: this.patParen(),
+				patMisc: this.patMisc(),
 
 				exp: this.exp(),
 

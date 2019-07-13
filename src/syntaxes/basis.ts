@@ -84,6 +84,8 @@ export const Token = {
 	RBRACK: "\\}",
 	EQUALOP: "=",
 	REVERSE_SOLIDUS: "\\\\",
+	AS: "as",
+	COLON: ":",
 };
 
 export class Scope {
