@@ -24,6 +24,10 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 				Scope.TERM_CONSTRUCTOR().split(' ').map(scope => {
 					colors.push([node, scope]);
 				});
+			} else if (node.type === 'symbolic') {
+				Scope.STYLE_OPERATOR().split(' ').map(scope => {
+					colors.push([node, scope]);
+				});
 			}
 			for (const child of node.children) {
 				visit(child);

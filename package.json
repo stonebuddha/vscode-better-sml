@@ -14,12 +14,6 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "sml.helloWorld",
-				"title": "SML: Hello World"
-			}
-		],
 		"grammars": [
 			{
 				"language": "sml",

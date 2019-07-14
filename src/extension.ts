@@ -187,11 +187,6 @@ export function activate(context: vscode.ExtensionContext) {
 		return { row: pos.line, column: pos.character };
 	}
 
-	let disposable = vscode.commands.registerCommand('sml.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World!');
-	});
-	context.subscriptions.push(disposable);
-
 	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onChangeConfiguration));
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(edit));
 	context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(close));

@@ -204,10 +204,6 @@ export class StandardML implements basis.ILanguage {
 					match: this.ops(capture(alt(Token.COLONGT, Token.COLON))),
 					name: Scope.PUNCTUATION_COLON(),
 				},
-				{
-					match: this.ops(Token.ASTERISK),
-					name: Scope.STYLE_OPERATOR(),
-				},
 			],
 		};
 	}
