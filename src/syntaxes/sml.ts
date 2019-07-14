@@ -92,7 +92,7 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.ITEM_OPEN(),
 				},
 				{
-					match: words(Token.LOCAL),
+					match: words(capture(alt(Token.LOCAL, Token.IN, Token.LET))),
 					name: Scope.ITEM_LET(),
 				},
 				{
@@ -173,7 +173,7 @@ export class StandardML implements basis.ILanguage {
 					name: `${Scope.TERM_CONSTRUCTOR()} ${Scope.STYLE_BOLD()}`,
 				},
 				{
-					match: alt(Token.LSQUARE, Token.RSQUARE),
+					match: alt(Token.LSQUARE, Token.RSQUARE, Token.HASHLSQUARE),
 					name: Scope.TERM_CONSTRUCTOR(),
 				},
 				{
@@ -184,7 +184,76 @@ export class StandardML implements basis.ILanguage {
 					match: this.ops(Token.DARROW),
 					name: Scope.VERTICAL_LINE(),
 				},
+				{
+					match: Token.DOTDOTDOT,
+					name: Scope.STYLE_OPERATOR(),
+				},
+				{
+					match: Token.DOT,
+					name: Scope.PUNCTUATION_DOT(),
+				},
+				{
+					match: Token.COMMA,
+					name: Scope.PUNCTUATION_COMMA(),
+				},
+				{
+					match: alt(Token.LPAREN, Token.RPAREN),
+					name: Scope.STYLE_DELIMITER(),
+				},
+				{
+					match: this.ops(capture(alt(Token.COLONGT, Token.COLON))),
+					name: Scope.PUNCTUATION_COLON(),
+				},
+				{
+					match: this.ops(Token.ASTERISK),
+					name: Scope.STYLE_OPERATOR(),
+				},
 			],
+		};
+	}
+
+	// Literals
+
+	public literal(): schema.Rule {
+		return {
+			patterns: [
+				include(this.literalCharacter),
+				include(this.literalString),
+			],
+		};
+	}
+
+	public literalCharacter(): schema.Rule {
+		return {
+			begin: seq(Token.HASHDQUOTE),
+			end: Token.DQUOTE,
+			name: Scope.TERM_CHARACTER(),
+			patterns: [include(this.literalStringEscape)],
+		};
+	}
+
+	public literalString(): schema.Rule {
+		return {
+			begin: Token.DQUOTE,
+			end: Token.DQUOTE,
+			name: Scope.TERM_STRING(),
+			patterns: [include(this.literalStringEscape)],
+		};
+	}
+
+	public literalStringEscape(): schema.Rule {
+		return {
+			match: seq(
+				Token.REVERSE_SOLIDUS,
+				group(
+					alt(
+						seq(Token.REVERSE_SOLIDUS, Token.DQUOTE, ...["n", "t", "b", "r"]),
+						seq(set(Class.digit), set(Class.digit), set(Class.digit)),
+						seq("x", set(Class.xdigit), set(Class.xdigit)),
+						seq("o", set("0-3"), set("0-7"), set("0-7")),
+					),
+				),
+			),
 		};
 	}
 
@@ -195,7 +264,7 @@ export class StandardML implements basis.ILanguage {
 			name: `Standard ML`,
 			scopeName: "source.sml",
 			fileTypes: [".sml", ".sig"],
-			patterns: [include(this.comment), include(this.keywords), include(this.symbols)],
+			patterns: [include(this.comment), include(this.literal), include(this.keywords), include(this.symbols)],
 			repository: {
 				comment: this.comment(),
 				commentBlock: this.commentBlock(),
@@ -204,6 +273,11 @@ export class StandardML implements basis.ILanguage {
 				keywords: this.keywords(),
 
 				symbols: this.symbols(),
+
+				literal: this.literal(),
+				literalCharacter: this.literalCharacter(),
+				literalString: this.literalString(),
+				literalStringEscape: this.literalStringEscape(),
 			},
 		};
 	}

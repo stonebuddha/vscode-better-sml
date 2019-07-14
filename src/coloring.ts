@@ -16,6 +16,14 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 				Scope.NAME_FUNCTION().split(' ').map(scope => {
 					colors.push([node, scope]);
 				});
+			} else if (node.type === 'int_constant' || node.type === 'word_constant' || node.type === 'float_constant') {
+				Scope.TERM_NUMBER().split(' ').map(scope => {
+					colors.push([node, scope]);
+				});
+			} else if (node.type === 'tuple_unit_exp' || node.type === 'unit_tuple_pat') {
+				Scope.TERM_CONSTRUCTOR().split(' ').map(scope => {
+					colors.push([node, scope]);
+				});
 			}
 			for (const child of node.children) {
 				visit(child);

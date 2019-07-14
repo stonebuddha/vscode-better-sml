@@ -99,6 +99,17 @@ export const Token = {
 	RSQUARE: "\\]",
 	ARROW: "->",
 	DARROW: "=>",
+	DQUOTE: '"',
+	REVERSE_SOLIDUS: "\\\\",
+	HASHDQUOTE: '#"',
+	LET: "let",
+	IN: "in",
+	DOT: "\\.",
+	DOTDOTDOT: "\\.\\.\\.",
+	COMMA: ",",
+	HASHLSQUARE: "#\\[",
+	COLON: ":",
+	COLONGT: ":>",
 };
 
 export class Scope {
