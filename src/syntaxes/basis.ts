@@ -110,6 +110,8 @@ export const Token = {
 	HASHLSQUARE: "#\\[",
 	COLON: ":",
 	COLONGT: ":>",
+	END: "end",
+	OF: "of",
 };
 
 export class Scope {

@@ -72,19 +72,11 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.ITEM_MODULE(),
 				},
 				{
-					match: words(Token.STRUCT),
-					name: Scope.LITERAL_STRUCTURE(),
-				},
-				{
-					match: words(Token.SIG),
-					name: Scope.LITERAL_SIGNATURE(),
-				},
-				{
 					match: words(capture(alt(Token.VAL, Token.FUN))),
 					name: Scope.ITEM_VAL(),
 				},
 				{
-					match: words(capture(alt(Token.TYPE, Token.DATATYPE, Token.ABSTYPE, Token.EQTYPE, Token.EXCEPTION, Token.NONFIX, Token.INFIX, Token.INFIXR, Token.WITH))),
+					match: words(capture(alt(Token.TYPE, Token.DATATYPE, Token.ABSTYPE, Token.EQTYPE, Token.EXCEPTION, Token.NONFIX, Token.INFIX, Token.INFIXR, Token.SHARING))),
 					name: `keyword ${Scope.STYLE_UNDERLINE()}`,
 				},
 				{
@@ -92,7 +84,7 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.ITEM_OPEN(),
 				},
 				{
-					match: words(capture(alt(Token.LOCAL, Token.IN, Token.LET))),
+					match: words(Token.IN),
 					name: Scope.ITEM_LET(),
 				},
 				{
@@ -100,7 +92,7 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.KEYWORD_REC(),
 				},
 				{
-					match: words(capture(alt(Token.WITHTYPE, Token.WHERE, Token.SHARING))),
+					match: words(capture(alt(Token.WITHTYPE, Token.WHERE, Token.WITH))),
 					name: Scope.SIGNATURE_WITH(),
 				},
 				{
@@ -120,12 +112,16 @@ export class StandardML implements basis.ILanguage {
 					name: Scope.TERM_IF(),
 				},
 				{
-					match: words(capture(alt(Token.CASE, Token.HANDLE, Token.RAISE, Token.WHILE, Token.DO))),
+					match: words(capture(alt(Token.HANDLE, Token.RAISE, Token.WHILE, Token.DO))),
 					name: Scope.STYLE_CONTROL(),
 				},
 				{
 					match: words(Token.FN),
 					name: Scope.TERM_FUN(),
+				},
+				{
+					match: words(Token.OF),
+					name: Scope.STYLE_DELIMITER(),
 				},
 				{
 					match: seq("\\b", Token.OP, lookAhead(group(alt("\\b", set(...this.operatorTokens()))))),
@@ -178,7 +174,7 @@ export class StandardML implements basis.ILanguage {
 				},
 				{
 					match: this.ops(Token.ARROW),
-					name: Scope.PUNCTUATION_EQUALS(),
+					name: Scope.OPERATOR_TYPE(),
 				},
 				{
 					match: this.ops(Token.DARROW),
@@ -203,6 +199,10 @@ export class StandardML implements basis.ILanguage {
 				{
 					match: this.ops(capture(alt(Token.COLONGT, Token.COLON))),
 					name: Scope.PUNCTUATION_COLON(),
+				},
+				{
+					match: this.ops(Token.ASTERISK),
+					name: Scope.STYLE_OPERATOR(),
 				},
 			],
 		};
@@ -243,24 +243,85 @@ export class StandardML implements basis.ILanguage {
 				Token.REVERSE_SOLIDUS,
 				group(
 					alt(
-						seq(Token.REVERSE_SOLIDUS, Token.DQUOTE, ...["n", "t", "b", "r"]),
+						set(Token.REVERSE_SOLIDUS, Token.DQUOTE, ...["a", "b", "f", "n", "r", "t", "v"]),
+						seq("^", set("@-_")),
 						seq(set(Class.digit), set(Class.digit), set(Class.digit)),
-						seq("x", set(Class.xdigit), set(Class.xdigit)),
-						seq("o", set("0-3"), set("0-7"), set("0-7")),
+						seq("u", set(Class.xdigit), set(Class.xdigit), set(Class.xdigit), set(Class.xdigit)),
 					),
 				),
 			),
 		};
 	}
 
+	// Matches
+
+	public matches(): schema.Rule {
+		return {
+			patterns: [
+				{
+					begin: words(Token.STRUCT),
+					end: words(Token.END),
+					captures: {
+						0: { name: Scope.LITERAL_STRUCTURE() },
+					},
+					patterns: [include(this.toplevel)],
+				},
+				{
+					begin: words(Token.SIG),
+					end: words(Token.END),
+					captures: {
+						0: { name: Scope.LITERAL_SIGNATURE() },
+					},
+					patterns: [include(this.toplevel)],
+				},
+				{
+					begin: words(Token.LET),
+					end: words(Token.END),
+					captures: {
+						0: { name: Scope.ITEM_LET() },
+					},
+					patterns: [include(this.toplevel)],
+				},
+				{
+					begin: words(Token.LOCAL),
+					end: words(Token.END),
+					captures: {
+						0: { name: Scope.ITEM_LET() },
+					},
+					patterns: [include(this.toplevel)],
+				},
+				{
+					begin: words(Token.CASE),
+					end: words(Token.OF),
+					captures: {
+						0: { name: Scope.STYLE_CONTROL() },
+					},
+					patterns: [include(this.toplevel)],
+				},
+			],
+		};
+	}
+
 	// Render
+
+	public toplevel(): schema.Rule {
+		return {
+			patterns: [
+				include(this.comment),
+				include(this.literal),
+				include(this.matches),
+				include(this.keywords),
+				include(this.symbols),
+			],
+		};
+	}
 
 	public render(): schema.IGrammar {
 		return {
 			name: `Standard ML`,
 			scopeName: "source.sml",
-			fileTypes: [".sml", ".sig"],
-			patterns: [include(this.comment), include(this.literal), include(this.keywords), include(this.symbols)],
+			fileTypes: [".sml", ".sig", ".fun"],
+			patterns: [include(this.toplevel)],
 			repository: {
 				comment: this.comment(),
 				commentBlock: this.commentBlock(),
@@ -274,6 +335,10 @@ export class StandardML implements basis.ILanguage {
 				literalCharacter: this.literalCharacter(),
 				literalString: this.literalString(),
 				literalStringEscape: this.literalStringEscape(),
+
+				matches: this.matches(),
+
+				toplevel: this.toplevel(),
 			},
 		};
 	}

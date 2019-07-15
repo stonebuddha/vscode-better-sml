@@ -104,6 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
 				old_tree.edit(delta);
 			}
 			const new_tree = smlLang.parser.parse(edit.document.getText(), old_tree);
+			console.log(new_tree.rootNode.toString());
 			trees[edit.document.uri.toString()] = new_tree;
 		}
 
@@ -151,8 +152,6 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!nodes.has(scope)) {
 				const dec = decorationCache.get(scope)!;
 				editor.setDecorations(dec, []);
-			} else {
-
 			}
 		}
 	}
