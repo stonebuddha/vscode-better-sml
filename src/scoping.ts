@@ -1,22 +1,43 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as jsonc from 'jsonc-parser';
 
-export interface TextMateRule {
-	scope: string | string[];
-	settings: TextMateRuleSettings;
-}
-
-export interface TextMateRuleSettings {
+export interface Rule {
 	foreground: string | undefined;
 	background: string | undefined;
 	fontStyle: string | undefined;
 }
 
-const colors = new Map<string, TextMateRuleSettings>();
+export enum Scope {
+	KEYWORD_MISC,
+	KEYWORD_MODULE,
+	KEYWORD_STRUCT,
+	KEYWORD_TYPE,
+	KEYWORD_VAL,
+	KEYWORD_FN,
+	KEYWORD_CTRL,
+	KEYWORD_AND,
 
-export function find(scope: string): TextMateRuleSettings | undefined {
+	NAME_MODULE,
+	NAME_FUNCTION,
+	NAME_TYPE,
+	NAME_PARAM,
+	NAME_CONSTR,
+	NAME_TYVAR,
+	NAME_WILD,
+
+	PUNCT_EQUALS,
+	PUNCT_TYPEOP,
+	PUNCT_DOT,
+	PUNCT_MISC,
+
+	LITERAL_STRING,
+	LITERAL_NUMBER,
+
+	COMMENT,
+}
+
+const colors = new Map<Scope, Rule>();
+
+export function find(scope: Scope): Rule | undefined {
 	return colors.get(scope);
 }
 
@@ -25,88 +46,50 @@ export async function load() {
 	const themeName = vscode.workspace.getConfiguration('workbench').get('colorTheme');
 	if (typeof themeName !== 'string') {
 		console.warn('workbench.colorTheme is', themeName);
-		return;
-	}
-	try {
-		await loadThemeNamed(themeName);
-	} catch (e) {
-		console.warn('Failed to load theme', themeName, e);
-	}
-}
+	} else {
+		switch (themeName) {
+			case 'Tomorrow Night Operator Mono':
+				let defaultRule: Rule = {
+					foreground: undefined,
+					background: undefined,
+					fontStyle: undefined,
+				};
 
-async function loadThemeNamed(themeName: string) {
-	for (const extension of vscode.extensions.all) {
-		const extensionPath: string = extension.extensionPath;
-		const extensionPackageJsonPath: string = path.resolve(extensionPath, 'package.json');
-		if (!await checkFileExists(extensionPackageJsonPath)) {
-			continue;
-		}
-		const packageJsonText: string = await readFileText(extensionPackageJsonPath);
-		const packageJson: any = jsonc.parse(packageJsonText);
-		if (packageJson.contributes && packageJson.contributes.themes) {
-			for (const theme of packageJson.contributes.themes) {
-				const id = theme.id || theme.label;
-				if (id === themeName) {
-					const themeRelativePath: string = theme.path;
-					const themeFullPath: string = path.resolve(extensionPath, themeRelativePath);
-					await loadThemeFile(themeFullPath);
-				}
-			}
-		}
-	}
-}
+				// Keywords
+				colors.set(Scope.KEYWORD_MISC, { ...defaultRule, foreground: '#CC6666' });
+				colors.set(Scope.KEYWORD_MODULE, { ...defaultRule, foreground: '#DE935F', fontStyle: 'underline' });
+				colors.set(Scope.KEYWORD_STRUCT, { ...defaultRule, fontStyle: 'italic' });
+				colors.set(Scope.KEYWORD_TYPE, { ...defaultRule, foreground: '#B294BB', fontStyle: 'underline' });
+				colors.set(Scope.KEYWORD_VAL, { ...defaultRule, foreground: '#F0C674', fontStyle: 'underline' });
+				colors.set(Scope.KEYWORD_FN, { ...defaultRule, foreground: '#B294BB' });
+				colors.set(Scope.KEYWORD_CTRL, { ...defaultRule, foreground: '#B294BB', fontStyle: 'italic' });
+				colors.set(Scope.KEYWORD_AND, { ...defaultRule, foreground: '#CC6666', fontStyle: 'underline' });
 
-async function loadThemeFile(themePath: string) {
-	if (await checkFileExists(themePath)) {
-		const themeContentText: string = await readFileText(themePath);
-		const themeContent: any = jsonc.parse(themeContentText);
-		if (themeContent && themeContent.tokenColors) {
-			loadColors(themeContent.tokenColors);
-			if (themeContent.include) {
-				const includedThemePath: string = path.resolve(path.dirname(themePath), themeContent.include);
-				await loadThemeFile(includedThemePath);
-			}
-		}
-	}
-}
+				// Names
+				colors.set(Scope.NAME_MODULE, { ...defaultRule, foreground: '#DE935F' });
+				colors.set(Scope.NAME_FUNCTION, { ...defaultRule, foreground: '#81A2BE', fontStyle: 'bold italic' });
+				colors.set(Scope.NAME_TYPE, { ...defaultRule, foreground: '#81A2BE', fontStyle: 'bold' });
+				colors.set(Scope.NAME_PARAM, { ...defaultRule, foreground: '#DE935F', fontStyle: 'italic' });
+				colors.set(Scope.NAME_CONSTR, { ...defaultRule, foreground: '#CC6666', fontStyle: 'bold' });
+				colors.set(Scope.NAME_TYVAR, { ...defaultRule, foreground: '#B294BB', fontStyle: 'italic' });
+				colors.set(Scope.NAME_WILD, { ...defaultRule, foreground: '#CED2CF' });
 
-function loadColors(textMateRules: TextMateRule[]): void {
-	for (const rule of textMateRules) {
-		if (typeof rule.scope === 'string') {
-			if (!colors.has(rule.scope)) {
-				colors.set(rule.scope, rule.settings);
-			}
-		} else if (rule.scope instanceof Array) {
-			for (const scope of rule.scope) {
-				if (!colors.has(scope)) {
-					colors.set(scope, rule.settings);
-				}
-			}
+				// Punctuations
+				colors.set(Scope.PUNCT_EQUALS, { ...defaultRule, foreground: '#F0C674', fontStyle: 'bold' });
+				colors.set(Scope.PUNCT_TYPEOP, { ...defaultRule, foreground: '#CC6666', fontStyle: 'bold' });
+				colors.set(Scope.PUNCT_DOT, { ...defaultRule, foreground: '#B294BB', fontStyle: 'bold' });
+				colors.set(Scope.PUNCT_MISC, { ...defaultRule, foreground: '#CC6666' });
+
+				// Literals
+				colors.set(Scope.LITERAL_STRING, { ...defaultRule, foreground: '#B5BD68' });
+				colors.set(Scope.LITERAL_NUMBER, { ...defaultRule, foreground: '#DE935F' });
+
+				// Comments
+				colors.set(Scope.COMMENT, { ...defaultRule, foreground: '#CED2CF', fontStyle: 'italic' });
+
+				break;
+			default:
+				console.warn('workbench.colorTheme', themeName, 'not supported yet');
 		}
 	}
-}
-
-function checkFileExists(filePath: string): Promise<boolean> {
-	return new Promise((resolve, reject) => {
-		fs.stat(filePath, (err, stats) => {
-			if (stats && stats.isFile()) {
-				resolve(true);
-			} else {
-				console.warn('No such file', filePath);
-				resolve(false);
-			}
-		});
-	});
-}
-
-function readFileText(filePath: string, encoding: string = 'utf8'): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
-		fs.readFile(filePath, encoding, (err, data) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(data);
-			}
-		});
-	});
 }

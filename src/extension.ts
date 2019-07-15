@@ -4,15 +4,15 @@ import * as path from 'path';
 import * as coloring from './coloring';
 import * as scoping from './scoping';
 
-const decorationCache = new Map<string, vscode.TextEditorDecorationType>();
+const decorationCache = new Map<scoping.Scope, vscode.TextEditorDecorationType>();
 
-function decoration(scope: string): vscode.TextEditorDecorationType | undefined {
+function decoration(scope: scoping.Scope): vscode.TextEditorDecorationType | undefined {
 	if (decorationCache.has(scope)) {
 		return decorationCache.get(scope);
 	} else {
-		const textmate = scoping.find(scope);
-		if (textmate !== undefined) {
-			const decoration = createDecorationFromTextmate(textmate);
+		const rule = scoping.find(scope);
+		if (rule) {
+			const decoration = createDecoration(rule);
 			decorationCache.set(scope, decoration);
 			return decoration;
 		} else {
@@ -21,17 +21,17 @@ function decoration(scope: string): vscode.TextEditorDecorationType | undefined 
 	}
 }
 
-function createDecorationFromTextmate(themeStyle: scoping.TextMateRuleSettings): vscode.TextEditorDecorationType {
+function createDecoration(rule: scoping.Rule): vscode.TextEditorDecorationType {
 	let options: vscode.DecorationRenderOptions = {};
 	options.rangeBehavior = vscode.DecorationRangeBehavior.OpenOpen;
-	if (themeStyle.foreground) {
-		options.color = themeStyle.foreground;
+	if (rule.foreground) {
+		options.color = rule.foreground;
 	}
-	if (themeStyle.background) {
-		options.backgroundColor = themeStyle.background;
+	if (rule.background) {
+		options.backgroundColor = rule.background;
 	}
-	if (themeStyle.fontStyle) {
-		let parts: string[] = themeStyle.fontStyle.split(' ');
+	if (rule.fontStyle) {
+		let parts: string[] = rule.fontStyle.split(' ');
 		parts.forEach((part) => {
 			switch (part) {
 				case 'italic':
@@ -70,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		if (smlLang.parser === undefined) {
+		if (!smlLang.parser) {
 			const wasm = path.resolve(".", "parsers", "sml.wasm");
 			const lang = await tree_sitter.Language.load(wasm);
 			const parser = new tree_sitter();
@@ -84,7 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	function edit(edit: vscode.TextDocumentChangeEvent) {
-		if (edit.document.languageId !== 'sml' || smlLang.parser === undefined) {
+		if (edit.document.languageId !== 'sml' || !smlLang.parser) {
 			return;
 		}
 
@@ -104,7 +104,6 @@ export function activate(context: vscode.ExtensionContext) {
 				old_tree.edit(delta);
 			}
 			const new_tree = smlLang.parser.parse(edit.document.getText(), old_tree);
-			console.log(new_tree.rootNode.toString());
 			trees[edit.document.uri.toString()] = new_tree;
 		}
 
@@ -127,11 +126,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	function colorEditor(editor: vscode.TextEditor) {
 		const tree = trees[editor.document.uri.toString()];
-		if (tree === undefined) {
+		if (!tree) {
 			return;
 		}
 		const scopes = smlLang.color(tree.rootNode, visibleLines(editor));
-		const nodes = new Map<string, tree_sitter.SyntaxNode[]>();
+		const nodes = new Map<scoping.Scope, tree_sitter.SyntaxNode[]>();
 		for (const [root, scope] of scopes) {
 			if (!nodes.has(scope)) {
 				nodes.set(scope, []);
@@ -143,9 +142,6 @@ export function activate(context: vscode.ExtensionContext) {
 			if (dec) {
 				const ranges = nodes.get(scope)!.map(range);
 				editor.setDecorations(dec, ranges);
-			} else if (!warnedScopes.has(scope)) {
-				console.warn(scope, 'was not found in the current theme');
-				warnedScopes.add(scope);
 			}
 		}
 		for (const scope of decorationCache.keys()) {
