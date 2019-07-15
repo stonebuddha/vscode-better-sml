@@ -2,6 +2,8 @@
 	"name": "vscode-better-sml",
 	"displayName": "vscode-better-sml",
 	"description": "Standard ML Support for Visual Studio Code",
+	"author": "Di Wang",
+	"license": "MIT",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.36.0"
