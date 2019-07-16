@@ -30,7 +30,6 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 				case 'eqtype':
 				case 'abstype':
 				case 'exception':
-				case 'sharing':
 					colors.push([node, scoping.Scope.KEYWORD_TYPE]);
 					break;
 				case 'val':
@@ -71,6 +70,7 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 				case 'where':
 				case 'withtype':
 				case 'with':
+				case 'sharing':
 					colors.push([node, scoping.Scope.KEYWORD_AND]);
 					break;
 				case 'op':
