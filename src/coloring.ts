@@ -140,6 +140,10 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 					colors.push([node, scoping.Scope.LITERAL_NUMBER]);
 					break;
 
+				case 'comment':
+					colors.push([node, scoping.Scope.COMMENT]);
+					break;
+
 				case 'tyvar':
 					colors.push([node, scoping.Scope.NAME_TYVAR]);
 					break;

@@ -28,7 +28,7 @@
 		"commentBlock": {
 			"begin": "\\(\\*(?!\\*[^\\)])",
 			"end": "\\*\\)",
-			"name": "comment constant.regexp meta.separator.markdown",
+			"name": "comment",
 			"contentName": "emphasis",
 			"patterns": [
 				{
@@ -42,7 +42,7 @@
 		"commentDoc": {
 			"begin": "\\(\\*\\*",
 			"end": "\\*\\)",
-			"name": "comment constant.regexp meta.separator.markdown",
+			"name": "comment",
 			"contentName": "emphasis",
 			"patterns": [
 				{
@@ -56,7 +56,7 @@
 		"string": {
 			"begin": "#\"|\"",
 			"end": "\"",
-			"name": "string beginning.punctuation.definition.quote.markdown",
+			"name": "string",
 			"patterns": [
 				{
 					"include": "#escape"
