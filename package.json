@@ -5,6 +5,7 @@
 	"author": "Di Wang",
 	"license": "MIT",
 	"version": "0.0.1",
+	"publisher": "stonebuddha",
 	"engines": {
 		"vscode": "^1.36.0"
 	},
