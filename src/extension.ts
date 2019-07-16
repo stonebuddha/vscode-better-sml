@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		if (!smlLang.parser) {
-			const wasm = path.relative(process.cwd(), path.resolve(context.extensionPath, "parsers", "sml.wasm"));
+			const wasm = path.relative(process.cwd(), path.join(context.extensionPath, "parsers", "sml.wasm"));
 			const lang = await tree_sitter.Language.load(wasm);
 			const parser = new tree_sitter();
 			parser.setLanguage(lang);
