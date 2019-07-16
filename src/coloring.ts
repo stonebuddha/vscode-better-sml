@@ -203,35 +203,35 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 							break;
 
 						case 'qident':
-							if (parent.nextSibling) {
+							if (node.nextSibling) {
 								colors.push([node, scoping.Scope.NAME_MODULE]);
 							} else {
-								if (isUpper(node.text)) {
-									colors.push([node, scoping.Scope.NAME_CONSTR]);
-								} else {
-									let gparent = parent.parent!;
-									switch (gparent.type) {
-										case 'var_struct':
-										case 'strspec':
-										case 'struct_whspec':
-										case 'var_fct_exp':
-										case 'open_ldec':
-											colors.push([node, scoping.Scope.NAME_MODULE]);
-											break;
-										case 'app_struct':
-										case 'share_spec':
-										case 'type_whspec':
-										case 'app_fct_exp':
-										case 'con_ty':
-											colors.push([node, scoping.Scope.NAME_TYPE]);
-											break;
-										case 'exn_def':
+								let gparent = parent.parent!;
+								switch (gparent.type) {
+									case 'var_struct':
+									case 'strspec':
+									case 'struct_whspec':
+									case 'var_fct_exp':
+									case 'open_ldec':
+										colors.push([node, scoping.Scope.NAME_MODULE]);
+										break;
+									case 'app_struct':
+									case 'share_spec':
+									case 'type_whspec':
+									case 'app_fct_exp':
+									case 'con_ty':
+										colors.push([node, scoping.Scope.NAME_TYPE]);
+										break;
+									case 'exn_def':
+										colors.push([node, scoping.Scope.NAME_CONSTR]);
+										break;
+									case 'access_pat':
+										if (isUpper(node.text)) {
 											colors.push([node, scoping.Scope.NAME_CONSTR]);
-											break;
-										case 'access_pat':
+										} else {
 											colors.push([node, scoping.Scope.NAME_PARAM]);
-											break;
-									}
+										}
+										break;
 								}
 							}
 							break;
