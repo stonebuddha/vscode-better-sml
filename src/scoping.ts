@@ -35,7 +35,7 @@ export enum Scope {
 	COMMENT,
 }
 
-const colors = new Map<Scope, Rule>();
+let colors = new Map<Scope, Rule>();
 
 export function find(scope: Scope): Rule | undefined {
 	return colors.get(scope);
@@ -92,7 +92,7 @@ function setColors(cfg: {
 
 export async function load() {
 	colors.clear();
-	const themeName = vscode.workspace.getConfiguration('workbench').get('colorTheme');
+	let themeName = vscode.workspace.getConfiguration('workbench').get('colorTheme');
 	if (typeof themeName !== 'string') {
 		console.warn('workbench.colorTheme is', themeName);
 	} else {
