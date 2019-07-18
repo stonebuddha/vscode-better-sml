@@ -224,7 +224,7 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 											colors.push([node, scoping.Scope.NAME_MODULE]);
 											break;
 										case 'app_struct':
-										case 'share_spec':
+										case 'sharespec':
 										case 'type_whspec':
 										case 'app_fct_exp':
 										case 'con_ty':
