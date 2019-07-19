@@ -195,6 +195,46 @@ export async function load() {
 					purple: '#6C71C4',
 				});
 				break;
+			case 'Gruvbox Dark Hard':
+			case 'Gruvbox Dark Medium':
+			case 'Gruvbox Dark Soft':
+				setColors({
+					comment: '#665C54',
+					red: '#FB4934',
+					orange: '#FE8019',
+					yellow: '#FABD2F',
+					green: '#B8BB26',
+					aqua: '#8EC07C',
+					blue: '#83A598',
+					purple: '#D3869B',
+				});
+				break;
+			case 'Gruvbox Light Hard':
+			case 'Gruvbox Light Medium':
+			case 'Gruvbox Light Soft':
+				setColors({
+					comment: '#BDAE93',
+					red: '#9D0006',
+					orange: '#AF3A03',
+					yellow: '#B57614',
+					green: '#79740E',
+					aqua: '#427B58',
+					blue: '#076678',
+					purple: '#8F3F71',
+				});
+				break;
+			case 'Oceanic Plus':
+				setColors({
+					comment: '#65737E',
+					red: '#EC5F67',
+					orange: '#F99157',
+					yellow: '#FAC863',
+					green: '#99C794',
+					aqua: '#5FB3B3',
+					blue: '#6699CC',
+					purple: '#C594C5',
+				});
+				break;
 			default:
 				console.warn('workbench.colorTheme', themeName, 'not supported yet');
 		}
