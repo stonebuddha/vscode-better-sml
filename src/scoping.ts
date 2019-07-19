@@ -7,26 +7,31 @@ export interface Rule {
 }
 
 export enum Scope {
-	KEYWORD_MODULE,
-	KEYWORD_STRUCT,
-	KEYWORD_TYPE,
-	KEYWORD_VAL,
-	KEYWORD_FN,
-	KEYWORD_CTRL,
-	KEYWORD_AND,
-	KEYWORD_MISC,
+	KEYWORD_MODULE, // structure/signature/functor/funsig
+	KEYWORD_STRUCT, // struct,end/sig,end
+	KEYWORD_TYPE, // type/datatype/eqtype/abstype/exception
+	KEYWORD_VAL, // val/fun
+	KEYWORD_FN, // fn
+	KEYWORD_CTRL, // if,then,else/case,of/handle/raise/while,do
+	KEYWORD_AND, // and/where/withtype/with/sharing
+	KEYWORD_LET, // let,in,end/local,in,end
+	KEYWORD_MISC, // include/open/overload/infix/infixr/nonfix/rec/as/op/andalso/orelse
 
 	NAME_MODULE,
 	NAME_FUNCTION,
 	NAME_TYPE,
-	NAME_PARAM,
+	NAME_PAT,
+	NAME_FIELD,
 	NAME_CONSTR,
 	NAME_TYVAR,
 	NAME_WILD,
 
 	PUNCT_EQUALS,
-	PUNCT_TYPEOP,
 	PUNCT_DOT,
+	PUNCT_COMMA,
+	PUNCT_COLON,
+	PUNCT_BAR,
+	PUNCT_TYPEOP,
 	PUNCT_MISC,
 
 	LITERAL_STRING,
@@ -59,27 +64,32 @@ function setColors(cfg: {
 
 	// Keywords
 	colors.set(Scope.KEYWORD_MODULE, { ...defaultRule, foreground: cfg.orange, fontStyle: 'underline' });
-	colors.set(Scope.KEYWORD_STRUCT, { ...defaultRule, fontStyle: 'italic' });
-	colors.set(Scope.KEYWORD_TYPE, { ...defaultRule, foreground: cfg.purple, fontStyle: 'underline' });
-	colors.set(Scope.KEYWORD_VAL, { ...defaultRule, foreground: cfg.yellow, fontStyle: 'underline' });
+	colors.set(Scope.KEYWORD_STRUCT, { ...defaultRule, fontStyle: 'bold italic' });
+	colors.set(Scope.KEYWORD_TYPE, { ...defaultRule, foreground: cfg.blue, fontStyle: 'underline' });
+	colors.set(Scope.KEYWORD_VAL, { ...defaultRule, foreground: cfg.purple, fontStyle: 'underline' });
 	colors.set(Scope.KEYWORD_FN, { ...defaultRule, foreground: cfg.purple });
-	colors.set(Scope.KEYWORD_CTRL, { ...defaultRule, foreground: cfg.purple, fontStyle: 'italic' });
+	colors.set(Scope.KEYWORD_CTRL, { ...defaultRule, foreground: cfg.purple, fontStyle: 'bold italic' });
 	colors.set(Scope.KEYWORD_AND, { ...defaultRule, foreground: cfg.red, fontStyle: 'underline' });
+	colors.set(Scope.KEYWORD_LET, { ...defaultRule, foreground: cfg.yellow, fontStyle: 'underline' });
 	colors.set(Scope.KEYWORD_MISC, { ...defaultRule, foreground: cfg.red });
 
 	// Names
 	colors.set(Scope.NAME_MODULE, { ...defaultRule, foreground: cfg.orange });
 	colors.set(Scope.NAME_FUNCTION, { ...defaultRule, foreground: cfg.blue, fontStyle: 'bold italic' });
-	colors.set(Scope.NAME_TYPE, { ...defaultRule, foreground: cfg.aqua, fontStyle: 'bold' });
-	colors.set(Scope.NAME_PARAM, { ...defaultRule, foreground: cfg.orange, fontStyle: 'italic' });
+	colors.set(Scope.NAME_TYPE, { ...defaultRule, foreground: cfg.blue, fontStyle: 'bold' });
+	colors.set(Scope.NAME_PAT, { ...defaultRule, foreground: cfg.orange, fontStyle: 'italic' });
+	colors.set(Scope.NAME_FIELD, { ...defaultRule, foreground: cfg.red, fontStyle: 'bold' });
 	colors.set(Scope.NAME_CONSTR, { ...defaultRule, foreground: cfg.red, fontStyle: 'bold' });
 	colors.set(Scope.NAME_TYVAR, { ...defaultRule, foreground: cfg.purple, fontStyle: 'italic' });
 	colors.set(Scope.NAME_WILD, { ...defaultRule, foreground: cfg.comment });
 
 	// Punctuations
 	colors.set(Scope.PUNCT_EQUALS, { ...defaultRule, foreground: cfg.yellow, fontStyle: 'bold' });
+	colors.set(Scope.PUNCT_DOT, { ...defaultRule, foreground: cfg.comment, fontStyle: 'bold' });
+	colors.set(Scope.PUNCT_COMMA, { ...defaultRule, foreground: cfg.red, fontStyle: 'bold' });
+	colors.set(Scope.PUNCT_COLON, { ...defaultRule, foreground: cfg.red, fontStyle: 'bold' });
+	colors.set(Scope.PUNCT_BAR, { ...defaultRule, foreground: cfg.yellow, fontStyle: 'bold' });
 	colors.set(Scope.PUNCT_TYPEOP, { ...defaultRule, foreground: cfg.red, fontStyle: 'bold' });
-	colors.set(Scope.PUNCT_DOT, { ...defaultRule, foreground: cfg.purple, fontStyle: 'bold' });
 	colors.set(Scope.PUNCT_MISC, { ...defaultRule, foreground: cfg.red });
 
 	// Literals
@@ -116,7 +126,7 @@ export async function load() {
 					comment: '#373B41',
 					red: '#C82829',
 					orange: '#F5871F',
-					yellow: '#C99E00',
+					yellow: '#EAB700',
 					green: '#718C00',
 					aqua: '#3E999F',
 					blue: '#4271AE',
@@ -127,7 +137,7 @@ export async function load() {
 			case 'Tomorrow Night Eighties Operator Mono':
 				setColors({
 					comment: '#CDCDCD',
-					red: '#99CC99',
+					red: '#F2777A',
 					orange: '#F99157',
 					yellow: '#FFCC66',
 					green: '#99CC99',
