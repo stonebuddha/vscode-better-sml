@@ -173,7 +173,7 @@ export async function load() {
 				break;
 			case 'Solarized Dark':
 				setColors({
-					comment: '#657B83',
+					comment: '#EEE8D5',
 					red: '#DC322F',
 					orange: '#CB4B16',
 					yellow: '#B58900',
@@ -185,7 +185,7 @@ export async function load() {
 				break;
 			case 'Solarized Light':
 				setColors({
-					comment: '#839496',
+					comment: '#073642',
 					red: '#DC322F',
 					orange: '#CB4B16',
 					yellow: '#B58900',
@@ -198,8 +198,11 @@ export async function load() {
 			case 'Gruvbox Dark Hard':
 			case 'Gruvbox Dark Medium':
 			case 'Gruvbox Dark Soft':
+			case 'Gruvbox Dark (Hard)':
+			case 'Gruvbox Dark (Medium)':
+			case 'Gruvbox Dark (Soft)':
 				setColors({
-					comment: '#665C54',
+					comment: '#EBDBB2',
 					red: '#FB4934',
 					orange: '#FE8019',
 					yellow: '#FABD2F',
@@ -212,8 +215,11 @@ export async function load() {
 			case 'Gruvbox Light Hard':
 			case 'Gruvbox Light Medium':
 			case 'Gruvbox Light Soft':
+			case 'Gruvbox Light (Hard)':
+			case 'Gruvbox Light (Medium)':
+			case 'Gruvbox Light (Soft)':
 				setColors({
-					comment: '#BDAE93',
+					comment: '#3C3836',
 					red: '#9D0006',
 					orange: '#AF3A03',
 					yellow: '#B57614',
@@ -224,8 +230,11 @@ export async function load() {
 				});
 				break;
 			case 'Oceanic Plus':
+			case 'Oceanic Next':
+			case 'Oceanic Next Italic':
+			case 'Oceanic Next Italic - White':
 				setColors({
-					comment: '#65737E',
+					comment: '#CDD3DE',
 					red: '#EC5F67',
 					orange: '#F99157',
 					yellow: '#FAC863',
