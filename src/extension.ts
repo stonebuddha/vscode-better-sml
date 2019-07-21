@@ -201,8 +201,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (root.hasError()) {
 				return [];
 			} else {
-				console.log(formatting.format(root, opt));
-				return [];
+				return formatting.format(root, opt);
 			}
 		}
 	});
