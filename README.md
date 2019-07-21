@@ -6,6 +6,8 @@ Standard ML Support for Visual Studio Code
 
 - highlighting
 	- [x] precise syntax highlighting for SML based on tree-sitter
+- editing
+	- [x] document fomatting (enable on save with `editor.formatOnSave`)
 
 ## Getting Started
 
