@@ -3,7 +3,7 @@ import * as tree_sitter from 'web-tree-sitter';
 import * as path from 'path';
 import * as coloring from './coloring';
 import * as scoping from './scoping';
-import * as formating from './formating';
+import * as formatting from './formatting';
 
 let initTreeSitter = tree_sitter.init();
 let decorationCache = new Map<scoping.Scope, vscode.TextEditorDecorationType>();
@@ -198,7 +198,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDocumentFormattingEditProvider('sml', {
 		provideDocumentFormattingEdits(doc, opt, tok) {
 			let root = trees[doc.uri.toString()].rootNode;
-			console.log(formating.format(root, opt));
+			console.log(formatting.format(root, opt));
 			return [];
 		}
 	});
