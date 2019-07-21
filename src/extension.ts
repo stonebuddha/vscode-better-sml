@@ -198,8 +198,12 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDocumentFormattingEditProvider('sml', {
 		provideDocumentFormattingEdits(doc, opt, tok) {
 			let root = trees[doc.uri.toString()].rootNode;
-			console.log(formatting.format(root, opt));
-			return [];
+			if (root.hasError()) {
+				return [];
+			} else {
+				console.log(formatting.format(root, opt));
+				return [];
+			}
 		}
 	});
 
