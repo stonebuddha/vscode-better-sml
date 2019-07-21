@@ -246,6 +246,7 @@ export async function load() {
 				break;
 			default:
 				console.warn('workbench.colorTheme', themeName, 'not supported yet');
+				break;
 		}
 	}
 }

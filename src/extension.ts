@@ -3,6 +3,7 @@ import * as tree_sitter from 'web-tree-sitter';
 import * as path from 'path';
 import * as coloring from './coloring';
 import * as scoping from './scoping';
+import * as formating from './formating';
 
 let initTreeSitter = tree_sitter.init();
 let decorationCache = new Map<scoping.Scope, vscode.TextEditorDecorationType>();
@@ -162,7 +163,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	async function onChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
-		let colorizationNeedsReload = event.affectsConfiguration('workbench.colorTheme') || event.affectsConfiguration('editor.tokenColorCustomizations');
+		let colorizationNeedsReload = event.affectsConfiguration('workbench.colorTheme');
 		if (colorizationNeedsReload) {
 			await loadStyles();
 			colorAllOpen();
@@ -193,6 +194,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let diagonosticCollection = vscode.languages.createDiagnosticCollection('sml');
 	context.subscriptions.push(diagonosticCollection);
+
+	vscode.languages.registerDocumentFormattingEditProvider('sml', {
+		provideDocumentFormattingEdits(doc, opt, tok) {
+			let root = trees[doc.uri.toString()].rootNode;
+			console.log(formating.format(root, opt));
+			return [];
+		}
+	});
 
 	async function activateLazily() {
 		await initTreeSitter;

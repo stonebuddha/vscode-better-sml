@@ -1,17 +1,17 @@
-import * as parser from 'web-tree-sitter';
+import * as tree_sitter from 'web-tree-sitter';
 import * as scoping from './scoping';
 
-export type colorFun = (root: parser.SyntaxNode, visibleRanges: { start: number, end: number }[]) => [[parser.SyntaxNode, scoping.Scope][], parser.SyntaxNode[]];
+export type colorFun = (root: tree_sitter.SyntaxNode, visibleRanges: { start: number, end: number }[]) => [[tree_sitter.SyntaxNode, scoping.Scope][], tree_sitter.SyntaxNode[]];
 
-export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number, end: number }[]): [[parser.SyntaxNode, scoping.Scope][], parser.SyntaxNode[]] {
-	let colors: [parser.SyntaxNode, scoping.Scope][] = [];
-	let errors: parser.SyntaxNode[] = [];
+export function colorSML(root: tree_sitter.SyntaxNode, visibleRanges: { start: number, end: number }[]): [[tree_sitter.SyntaxNode, scoping.Scope][], tree_sitter.SyntaxNode[]] {
+	let colors: [tree_sitter.SyntaxNode, scoping.Scope][] = [];
+	let errors: tree_sitter.SyntaxNode[] = [];
 
 	function isUpper(id: string) {
 		return id.charAt(0) >= 'A' && id.charAt(0) <= 'Z';
 	}
 
-	function visit(node: parser.SyntaxNode) {
+	function visit(node: tree_sitter.SyntaxNode) {
 		if (!isVisible(node, visibleRanges)) {
 			return;
 		} else {
@@ -282,7 +282,7 @@ export function colorSML(root: parser.SyntaxNode, visibleRanges: { start: number
 	return [colors, errors];
 }
 
-function isVisible(node: parser.SyntaxNode, visibleRanges: { start: number, end: number }[]) {
+function isVisible(node: tree_sitter.SyntaxNode, visibleRanges: { start: number, end: number }[]) {
 	for (let { start, end } of visibleRanges) {
 		let overlap = node.startPosition.row <= end + 1 && start - 1 <= node.endPosition.row;
 		if (overlap) {
