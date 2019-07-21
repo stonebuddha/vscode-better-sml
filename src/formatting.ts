@@ -189,6 +189,10 @@ export function format(root: tree_sitter.SyntaxNode, options: vscode.FormattingO
 					}
 				}
 
+				if (child.type === 'struct' && root.parent!.type === 'let_struct') {
+					depth += 1;
+				}
+
 				visit(child, last_row, depth);
 
 				if (afters.includes(child.type)) {
