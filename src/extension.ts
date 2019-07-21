@@ -195,7 +195,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let diagonosticCollection = vscode.languages.createDiagnosticCollection('sml');
 	context.subscriptions.push(diagonosticCollection);
 
-	vscode.languages.registerDocumentFormattingEditProvider('sml', {
+	vscode.languages.registerDocumentFormattingEditProvider({ language: 'sml', scheme: 'file' }, {
 		provideDocumentFormattingEdits(doc, opt, tok) {
 			let root = trees[doc.uri.toString()].rootNode;
 			if (root.hasError()) {
