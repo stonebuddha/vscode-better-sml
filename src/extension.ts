@@ -206,6 +206,15 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	vscode.languages.registerHoverProvider({ language: 'sml', scheme: 'file' }, {
+		provideHover(doc, pos, _tok) {
+			let ran = doc.getWordRangeAtPosition(pos, /'[A-Za-z0-9_']+|[A-Za-z][A-Za-z0-9_']*|[!%&$#+\-/:<=>?@\\~`^|*]+|~?[0-9]+\.[0-9]+([Ee]~?[0-9]+)?|~?[0-9]+|~?0x[0-9A-Fa-f]+|0w[0-9]+|0wx[0-9A-Fa-f]+/);
+			if (ran) {
+				return new vscode.Hover(doc.getText(ran));
+			}
+		}
+	});
+
 	async function activateLazily() {
 		await initTreeSitter;
 		await loadStyles();

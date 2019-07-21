@@ -1,0 +1,11 @@
+{
+	"Let": {
+		"prefix": "letb",
+		"body": [
+			"let",
+			"in",
+			"\t$0",
+			"end"
+		]
+	}
+}

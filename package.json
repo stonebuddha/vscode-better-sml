@@ -37,6 +37,12 @@
 				],
 				"configuration": "./sml.configuration.json"
 			}
+		],
+		"snippets": [
+			{
+				"language": "sml",
+				"path": "./snippets/sml.json"
+			}
 		]
 	},
 	"scripts": {

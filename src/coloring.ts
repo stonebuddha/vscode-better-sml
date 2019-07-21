@@ -15,7 +15,7 @@ export function colorSML(root: tree_sitter.SyntaxNode, visibleRanges: { start: n
 		if (!isVisible(node, visibleRanges)) {
 			return;
 		} else {
-			if (node.type === 'ERROR' && !node.children.find(function (node) { return node.hasError(); })) {
+			if (node.type === 'ERROR' && node.children.find(function (node) { return node.hasError(); }) === undefined) {
 				errors.push(node);
 			}
 
