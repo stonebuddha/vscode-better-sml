@@ -244,6 +244,18 @@ export async function load() {
 					purple: '#C594C5',
 				});
 				break;
+			case 'Abyss':
+				setColors({
+					comment: '#384887',
+					red: '#FF9DA4',
+					orange: '#FF7882',
+					yellow: '#FFEEAD',
+					green: '#B8F171',
+					aqua: '#78FFFF',
+					blue: '#80BAFF',
+					purple: '#D778FF',
+				});
+				break;
 			default:
 				console.warn('workbench.colorTheme', themeName, 'not supported yet');
 				break;
