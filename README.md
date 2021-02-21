@@ -13,4 +13,4 @@ Standard ML Support for Visual Studio Code
 
 ### Syntax Themes
 
-Currently only Tomorrow/Solarized/Gruvbox/Oceanic/Abyss Themes are supported.
+Currently only Tomorrow/Solarized/Gruvbox/Oceanic/Abyss/Default Dark+ Themes are supported.

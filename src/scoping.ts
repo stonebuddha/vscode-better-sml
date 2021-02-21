@@ -120,6 +120,18 @@ export async function load() {
 					purple: '#B294BB',
 				});
 				break;
+			case "Default Dark+":
+				setColors({
+					comment: '#6A9955',
+					red: '#CC6666',
+					orange: '#b5cea8',
+					yellow: '#F0C674',
+					green: '#ce9178',
+					aqua: '#8ABEB7',
+					blue: '#DCDCAA',
+					purple: '#569cd6',
+				});
+				break;
 			case 'Tomorrow':
 			case 'Tomorrow Operator Mono':
 				setColors({
