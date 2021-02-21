@@ -4,7 +4,7 @@
 	"description": "Standard ML Support for Visual Studio Code",
 	"author": "Di Wang",
 	"license": "MIT",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "stonebuddha",
 	"engines": {
 		"vscode": "^1.36.0"
